@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
-import { Home, DollarSign, Settings } from 'lucide-react';
+import {
+  Home,
+  DollarSign,
+  Settings
+} from 'lucide-react';
 import './App.css';
 
 // Import pages
@@ -10,14 +14,19 @@ import SettingsPage from './pages/SettingsPage';
 
 function App() {
   const [showSplash, setShowSplash] = useState(true);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
   useEffect(() => {
     const splashTimer = setTimeout(() => {
       setShowSplash(false);
-    }, 5000); // Extend time for video logo
+    }, 5000);
 
     return () => clearTimeout(splashTimer);
   }, []);
+
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
 
   return (
       <Router>
@@ -38,40 +47,44 @@ function App() {
           )}
 
           <div className="main-layout">
-            <aside className="sidebar">
-              <div className="sidebar-logo">
+            <aside className={`sidebar ${isSidebarOpen ? 'open' : 'closed'}`}>
+              <div
+                  className="sidebar-logo"
+                  onClick={toggleSidebar}
+                  style={{ cursor: 'pointer' }}
+              >
                 <img
-                    src="/logo-small.png"
+                    src="/icon.png"
                     alt="Money Care Logo"
                     className="small-logo"
                 />
-                <span className="app-name">Money Care</span>
+                {isSidebarOpen && <span className="app-name">Money Care</span>}
               </div>
               <nav>
                 <ul>
                   <li>
-                    <Link to="/">
+                    <Link to="/" onClick={isSidebarOpen ? undefined : toggleSidebar}>
                       <Home className="sidebar-icon" />
-                      <span>Home</span>
+                      {isSidebarOpen && <span>Home</span>}
                     </Link>
                   </li>
                   <li>
-                    <Link to="/finances">
+                    <Link to="/finances" onClick={isSidebarOpen ? undefined : toggleSidebar}>
                       <DollarSign className="sidebar-icon" />
-                      <span>Finances</span>
+                      {isSidebarOpen && <span>Finances</span>}
                     </Link>
                   </li>
                   <li>
-                    <Link to="/settings">
+                    <Link to="/settings" onClick={isSidebarOpen ? undefined : toggleSidebar}>
                       <Settings className="sidebar-icon" />
-                      <span>Settings</span>
+                      {isSidebarOpen && <span>Settings</span>}
                     </Link>
                   </li>
                 </ul>
               </nav>
             </aside>
 
-            <main className="main-content">
+            <main className={`main-content ${isSidebarOpen ? 'sidebar-open' : 'sidebar-closed'}`}>
               <Routes>
                 <Route path="/" element={<HomePage />} />
                 <Route path="/finances" element={<FinancesPage />} />
