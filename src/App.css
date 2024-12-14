@@ -1,58 +1,119 @@
-.App {
-  text-align: center;
-  background-color: #f4f4f4;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
+:root {
+    /* Dark Theme Colors */
+    --background-dark: #121212;
+    --text-primary: #E0E0E0;
+    --text-secondary: #B0B0B0;
+    --accent-color: #BB86FC;
+    --sidebar-background: #1E1E1E;
 }
 
-.App-header {
-  background-color: #ffffff;
-  padding: 20px;
-  color: #2c3e50;
+body {
+    margin: 0;
+    font-family: 'Arial', sans-serif;
+    background-color: var(--background-dark);
+    color: var(--text-primary);
 }
 
-.logo-container {
-  animation: fadeIn 1.5s ease-out;
-  margin: 20px 0;
+.app-container {
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
 }
 
-.logo-text {
-  font-size: 2.5rem;
-  font-weight: bold;
-  color: #2c3e50;
+/* Splash Screen */
+.splash-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--background-dark);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    animation: splash-fadeout 2s forwards;
 }
 
-.install-btn {
-  background-color: #3498db;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  margin: 15px 0;
-  border-radius: 5px;
-  cursor: pointer;
+.splash-logo {
+    width: 200px;
+    height: 200px;
+    object-fit: contain;
+    animation: logo-scale 2s ease-in-out;
 }
 
-.finance-dashboard {
-  background-color: white;
-  border-radius: 10px;
-  padding: 20px;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+.main-layout {
+    display: flex;
+    width: 100%;
 }
 
-.dashboard-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 15px;
+/* Sidebar Styles */
+.sidebar {
+    width: 250px;
+    background-color: var(--sidebar-background);
+    height: 100vh;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
 }
 
-.dashboard-card {
-  background-color: #f8f9fa;
-  padding: 15px;
-  border-radius: 8px;
+.sidebar-logo {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 30px;
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; transform: scale(0.8); }
-  to { opacity: 1; transform: scale(1); }
+.small-logo {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+}
+
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+}
+
+.sidebar ul li {
+    margin-bottom: 15px;
+}
+
+.sidebar ul li a {
+    display: flex;
+    align-items: center;
+    color: var(--text-primary);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.sidebar ul li a:hover {
+    color: var(--accent-color);
+}
+
+.sidebar-icon {
+    margin-right: 10px;
+    width: 20px;
+    height: 20px;
+}
+
+.main-content {
+    flex-grow: 1;
+    padding: 20px;
+    overflow-y: auto;
+}
+
+/* Animations */
+@keyframes splash-fadeout {
+    0% { opacity: 1; }
+    90% { opacity: 1; }
+    100% {
+        opacity: 0;
+        visibility: hidden;
+    }
+}
+
+@keyframes logo-scale {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(0.1); }
 }

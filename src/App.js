@@ -1,81 +1,86 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import { Home, DollarSign, Settings } from 'lucide-react';
 import './App.css';
 
+// Import pages
+import HomePage from './pages/HomePage';
+import FinancesPage from './pages/FinancesPage';
+import SettingsPage from './pages/SettingsPage';
+
 function App() {
-  const [isInstallable, setIsInstallable] = useState(false);
-  const [deferredPrompt, setDeferredPrompt] = useState(null);
+  const [showSplash, setShowSplash] = useState(true);
 
   useEffect(() => {
-    // PWA Install Prompt Handling
-    window.addEventListener('beforeinstallprompt', (e) => {
-      e.preventDefault();
-      setDeferredPrompt(e);
-      setIsInstallable(true);
-    });
+    const splashTimer = setTimeout(() => {
+      setShowSplash(false);
+    }, 5000); // Extend time for video logo
 
-    // Service Worker Registration
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('/service-worker.js')
-        .then(registration => {
-          console.log('Service Worker registered successfully:', registration.scope);
-        })
-        .catch(error => {
-          console.log('Service Worker registration failed:', error);
-        });
-    }
+    return () => clearTimeout(splashTimer);
   }, []);
 
-  const handleInstallClick = async () => {
-    if (deferredPrompt) {
-      deferredPrompt.prompt();
-      const { outcome } = await deferredPrompt.userChoice;
-      
-      if (outcome === 'accepted') {
-        console.log('App installed');
-      } else {
-        console.log('App install cancelled');
-      }
-      
-      setDeferredPrompt(null);
-      setIsInstallable(false);
-    }
-  };
-
   return (
-    <div className="App">
-      <header className="App-header">
-        <h1>RT Finance</h1>
-        
-        {/* Animated Logo Component */}
-        <div className="logo-container">
-          <div className="logo-text">RT Finance</div>
-        </div>
-        
-        {/* Install PWA Button */}
-        {isInstallable && (
-          <button onClick={handleInstallClick} className="install-btn">
-            Install App
-          </button>
-        )}
-        
-        {/* Main App Content */}
-        <div className="app-content">
-          <section className="finance-dashboard">
-            <h2>Financial Overview</h2>
-            <div className="dashboard-grid">
-              <div className="dashboard-card">
-                <h3>Balance</h3>
-                <p>$24,500.75</p>
+      <Router>
+        <div className="app-container">
+          {showSplash && (
+              <div className="splash-screen">
+                <video
+                    autoPlay
+                    muted
+                    playsInline
+                    className="logo-video"
+                    onEnded={() => setShowSplash(false)}
+                >
+                  <source src="/logo-animation.mp4" type="video/mp4" />
+                  Your browser does not support the video tag.
+                </video>
               </div>
-              <div className="dashboard-card">
-                <h3>Investments</h3>
-                <p>+3.2% Today</p>
+          )}
+
+          <div className="main-layout">
+            <aside className="sidebar">
+              <div className="sidebar-logo">
+                <img
+                    src="/logo-small.png"
+                    alt="Money Care Logo"
+                    className="small-logo"
+                />
+                <span className="app-name">Money Care</span>
               </div>
-            </div>
-          </section>
+              <nav>
+                <ul>
+                  <li>
+                    <Link to="/">
+                      <Home className="sidebar-icon" />
+                      <span>Home</span>
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to="/finances">
+                      <DollarSign className="sidebar-icon" />
+                      <span>Finances</span>
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to="/settings">
+                      <Settings className="sidebar-icon" />
+                      <span>Settings</span>
+                    </Link>
+                  </li>
+                </ul>
+              </nav>
+            </aside>
+
+            <main className="main-content">
+              <Routes>
+                <Route path="/" element={<HomePage />} />
+                <Route path="/finances" element={<FinancesPage />} />
+                <Route path="/settings" element={<SettingsPage />} />
+              </Routes>
+            </main>
+          </div>
         </div>
-      </header>
-    </div>
+      </Router>
   );
 }
 
